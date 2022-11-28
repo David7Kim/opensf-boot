@@ -49,7 +49,7 @@ public class PersistanceJPAConfig {
         public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
            LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
            em.setDataSource(dataSource());
-           em.setPackagesToScan(new String[] {"com.domain.model"});
+           em.setPackagesToScan("com.opensales.app.domain.model");
            JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
            em.setJpaVendorAdapter(vendorAdapter);
            em.setJpaProperties(additionalProperties());
