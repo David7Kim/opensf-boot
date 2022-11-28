@@ -1,4 +1,4 @@
-package com.config;
+/*package com.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -75,3 +75,4 @@ public class PersistanceJPAConfig {
             return properties;
         }
 }
+*/
