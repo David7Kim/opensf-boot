@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -36,8 +38,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     private PostCommentRepository postCommentRepository;
-    
-    @Autowired 
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -98,31 +100,33 @@ public class BoardServiceImpl implements BoardService {
         Boolean msg = false;
         logger.info("addPost() - param : {} ", param);
         Post post = new Post();
-        
-        if(param.get("board_id")!=null && !param.get("board_id").equals(""))  {
-            if(param.get("contents")!=null && !param.get("contents").equals("")) {
-                if(param.get("created_date").toString()!= null && !param.get("created_date").equals("")){
-                    if(param.get("updated_date").toString()!= null && !param.get("updated_date").equals("")) {
-                        if(param.get("writer").toString()!= null && !param.get("writer").equals("")) {
-                            post.setBoardId(converter.converterStringToLong(param.get("board_id")));
-                            post.setContents(param.get("contents").toString());
-                            post.setCreatedDate(converter.converterStringtoDate(param.get("created_date").toString()));
-                            post.setUpdatedDate(converter.converterStringtoDate(param.get("updated_date").toString()));
-                            post.setWriter(param.get("writer").toString());
-                            post.setUserId(userRepository.findByUserAccount(param.get("writer").toString()));
+        try {
+            if (param.get("board_id") != null && !param.get("board_id").equals("")) {
+                if (param.get("contents") != null && !param.get("contents").equals("")) {
+                    if (param.get("created_date").toString() != null && !param.get("created_date").equals("")) {
+                        if (param.get("updated_date").toString() != null && !param.get("updated_date").equals("")) {
+                            if (param.get("writer").toString() != null && !param.get("writer").equals("")) {
+                                post.setBoardId(converter.converterStringToLong(param.get("board_id")));
+                                post.setContents(param.get("contents").toString());
+                                post.setCreatedDate(
+                                        converter.converterStringtoDate(param.get("created_date").toString()));
+                                post.setUpdatedDate(
+                                        converter.converterStringtoDate(param.get("updated_date").toString()));
+                                post.setWriter(param.get("writer").toString());
+                                post.setUserId(userRepository.findByUserAccount(param.get("writer").toString()));
+                                //Post set을 마치고 값을 저장 
+                                postRespository.save(post);
+                                msg = true;
+                            }
                         }
                     }
                 }
             }
-        } else {
-           logger.info("addPost Error NullPoint");
         }
-        try {
-            postRespository.save(post);
-            msg = true;
-        } catch (NullPointerException e) {
+        catch (NullPointerException e) {
             e.printStackTrace();
             logger.info("addPost() Exception");
+            logger.info("addPost Error NullPoint");
         }
         return msg;
     }
@@ -130,7 +134,7 @@ public class BoardServiceImpl implements BoardService {
     /**
      * @Method Name : getPost
      * @작성일 : 2022. 8. 25.
-     * @작성자 : kimdonghyeon
+     * @작성자 : tykim
      * @변경이력 :
      * @Method 설명 : 특정 Post 한개를 가져온다.
      * @param postId
@@ -140,7 +144,7 @@ public class BoardServiceImpl implements BoardService {
     public Post getPost(long postId) {
         Post post = new Post();
         post = postRespository.findById(postId);
-       
+
         return post;
     }
 
@@ -155,17 +159,17 @@ public class BoardServiceImpl implements BoardService {
      */
     @Override
     public List<Post> getBoardPostLists(Long boardId) {
-        
+
         List<Post> post = postRespository.findByBoardId(boardId);
-        List<Post>newPost = null;
-//        for (Post posts : post) {
-//            posts.getUserId().setPassword("비공개");
-//            newPost.add(post.size(), posts);
-//        }
+        List<Post> newPost = null;
+        //        for (Post posts : post) {
+        //            posts.getUserId().setPassword("비공개");
+        //            newPost.add(post.size(), posts);
+        //        }
         //postRespository.findAll(sort);
         //board 는 필요없고 그냥 하나의 Chatter로만 사용하기로 함
         // 나중에 게시판 같은것이 필요하면 그룹 기능을 추가할 생각임
-        
+
         return post;
     }
 
@@ -200,7 +204,7 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoardPost(long postId) {
         Post post = postRespository.findById(postId);
         postRespository.delete(post);
-       
+
     }
 
     /**
@@ -283,18 +287,18 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-      * @Method Name : getPostList
-      * @작성일 : 2022. 11. 14.
-      * @작성자 : kimdonghyeon
-      * @변경이력 : 
-      * @Method 설명 :
-      * @param pageable
-      * @return
-      */
+     * @Method Name : getPostList
+     * @작성일 : 2022. 11. 14.
+     * @작성자 : tykim
+     * @변경이력 :
+     * @Method 설명 :
+     * @param pageable
+     * @return
+     */
     @Override
-    public Page<Post> getPostList(int page, int size,Sort sort) {
-//        return postRespository.findAll(new PageRequest(page, size,sort));
-        return null;
+    public Page<Post> getPostList(int page, int size, Pageable pageable) {
+        pageable = PageRequest.of(page, size);
+        return postRespository.findAll(pageable);
     }
 
 }

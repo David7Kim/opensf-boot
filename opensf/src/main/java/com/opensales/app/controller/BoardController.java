@@ -79,12 +79,11 @@ public class BoardController {
     @RequestMapping(value = "/chatter/post", method = {RequestMethod.GET})
     public Page<Post> getPostList(@RequestParam (value ="page" ,required=true,defaultValue="0")int page,
             @RequestParam (value ="size" ,required=true,defaultValue="5")int size,
-            @RequestParam (value="direction" , required=false, defaultValue="DESC") String direction,
-            @RequestParam(value="sort" ,required=false, defaultValue="id")Sort sort) {
+            Pageable pageable) {
         
         logger.info("getPostList() - page: {} , size  :{}  "  ,page ,size);
         
-        return boardService.getPostList(page, size, sort);
+        return boardService.getPostList(page, size, pageable);
     }
     /**
       * @Method Name : deleteBoardPost

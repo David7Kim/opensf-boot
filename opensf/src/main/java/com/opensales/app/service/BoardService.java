@@ -23,7 +23,7 @@ public interface BoardService  {
     public String getBoardList(Boolean authoriz);
     public List<Post> getBoardPostLists(Long boardId);
     public Post getPost(long postId);
-    public Page<Post> getPostList(int page , int size, Sort sort);
+    public Page<Post> getPostList(int page , int size , Pageable pageable);
     
     public Page<PostComments> getPostCommentList(int page, int size ,Long postId);
     

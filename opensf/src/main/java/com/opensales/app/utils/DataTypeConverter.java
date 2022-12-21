@@ -173,6 +173,7 @@ public class DataTypeConverter {
     public static String profileImageSave(String base64Url,String empnNo) {
         String data = "";
         String type ="jpg";
+        //Path는 Config Setting으로 빼둔다.
         String path ="D:\\reactProject\\opensales\\public\\images\\"+empnNo+"_profile_pic"+"."+type;
         byte[] imageBytes = null;
         

@@ -219,10 +219,10 @@ public class RegisterServiceImpl implements RegisterService {
             
             //패스워드가 가져온 정보와 동일하면 로그인, 아닌경우 메세지 풀력
             if(userPassword.equals(password)) {
-                logger.info("Password is Matched : {}");
+                logger.info("Password is Matched UserAccount : {}", userAccount);
                 return result;
             }else {
-                logger.info("Password is not Matched : {}");
+                logger.info("Password is not Matched  UserAccount : {}", userAccount);
                 result = false;
                 return result;
             }
@@ -274,6 +274,13 @@ public class RegisterServiceImpl implements RegisterService {
     public List<UserProfile> getUserInfoes() {
         //사용자 정보 가져오기
         List<UserProfile> userInfoes =userProfileRepository.findAll();
+        List<UserProfile> neoUsers = null;
+        
+//        패스워드 유출 되는 부분을 고려해서 비공개 시키는 함수가 필요함
+//        for (UserProfile users : userInfoes) {
+//            users.getUserProfileId().setPassword("비공개");
+//            neoUsers.add(users);
+//        }
         logger.info("getUserInfoes() result : {} ",userInfoes );
         return userInfoes;
     }

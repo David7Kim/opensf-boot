@@ -45,7 +45,7 @@ public class LoginController {
       * @return
       */
     @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/logins", method = RequestMethod.POST)
     public String userLogin(@RequestBody Map<String, Object> params, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = new User();
